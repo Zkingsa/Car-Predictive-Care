@@ -78,9 +78,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
   return (
     <div className="space-y-6">
       
-      {/* Top Vehicle Selector Bar */}
-      <div className="flex items-center justify-between gap-3 overflow-x-auto pb-1 scrollbar">
-        <div className="flex items-center gap-2">
+      {/* Top Vehicle Selector & Diagnostic Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-1">
+        {/* Horizontal Vehicle Carousel */}
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 pt-0.5 scrollbar max-w-full">
           {vehicles.map((v) => {
             const isSelected = v.id === vehicle.id;
             const hasDanger = v.alerts.some((a) => a.level === "danger");
@@ -90,15 +91,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <button
                 key={v.id}
                 onClick={() => onSelectVehicle(v.id)}
-                className={`group relative flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left transition-all ${
+                className={`group relative flex shrink-0 items-center gap-2 sm:gap-2.5 rounded-xl border px-2.5 py-1.5 sm:px-3 sm:py-2 text-left transition-all ${
                   isSelected
-                    ? "border-[#00D2C4] bg-[#00D2C4]/10 shadow-[0_0_15px_rgba(0,210,196,0.15)]"
+                    ? "border-[#00D2C4] bg-[#00D2C4]/10 shadow-[0_0_12px_rgba(0,210,196,0.15)] ring-1 ring-[#00D2C4]/30"
                     : "border-[#23272F] bg-[#101216] hover:border-[#343B47] hover:bg-[#15181E]"
                 }`}
               >
-                <div className="relative">
+                <div className="relative shrink-0">
                   <div
-                    className={`h-2.5 w-2.5 rounded-full ${
+                    className={`h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full ${
                       hasDanger
                         ? "bg-rose-500 animate-ping"
                         : hasWarn
@@ -107,17 +108,23 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     }`}
                   />
                   <div
-                    className={`absolute inset-0 h-2.5 w-2.5 rounded-full ${
+                    className={`absolute inset-0 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full ${
                       hasDanger ? "bg-rose-500" : hasWarn ? "bg-amber-400" : "bg-emerald-400"
                     }`}
                   />
                 </div>
-                <div>
-                  <div className={`text-xs font-bold tracking-tight ${isSelected ? "text-white" : "text-zinc-300"}`}>
+
+                <div className="min-w-0">
+                  <div className={`text-[11px] sm:text-xs font-bold tracking-tight whitespace-nowrap ${isSelected ? "text-white" : "text-zinc-300"}`}>
                     {v.name}
                   </div>
-                  <div className="font-mono text-[10px] text-zinc-500">
-                    Health: <span className={v.health < 65 ? "text-rose-400 font-semibold" : v.health < 80 ? "text-amber-400 font-semibold" : "text-emerald-400 font-semibold"}>{v.health}%</span> · {v.type.toUpperCase()}
+                  <div className="font-mono text-[9px] sm:text-[10px] text-zinc-500 whitespace-nowrap flex items-center gap-1">
+                    <span>Health:</span>
+                    <span className={v.health < 65 ? "text-rose-400 font-semibold" : v.health < 80 ? "text-amber-400 font-semibold" : "text-emerald-400 font-semibold"}>
+                      {v.health}%
+                    </span>
+                    <span>·</span>
+                    <span className="uppercase text-zinc-400">{v.type}</span>
                   </div>
                 </div>
               </button>
@@ -125,14 +132,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
           })}
         </div>
 
-        {/* Live Scan Trigger */}
+        {/* Live Scan Trigger (Responsive size) */}
         <button
           onClick={handleScan}
           disabled={isScanning}
-          className="flex shrink-0 items-center gap-2 rounded-xl border border-[#00D2C4]/40 bg-[#00D2C4]/10 px-3.5 py-2 text-xs font-semibold text-[#00D2C4] hover:bg-[#00D2C4]/20 transition-all disabled:opacity-50 shadow-sm"
+          className="flex shrink-0 items-center justify-center gap-1.5 self-end sm:self-auto rounded-xl border border-[#00D2C4]/40 bg-[#00D2C4]/10 px-3 py-1.5 sm:px-3.5 sm:py-2 text-[11px] sm:text-xs font-semibold text-[#00D2C4] hover:bg-[#00D2C4]/20 transition-all disabled:opacity-50 shadow-sm whitespace-nowrap"
         >
-          <RefreshCw size={13} className={isScanning ? "animate-spin" : ""} />
-          <span>{isScanning ? "Scanning Telemetry..." : "Run Telematics Diagnostic"}</span>
+          <RefreshCw size={12} className={isScanning ? "animate-spin" : ""} />
+          <span className="hidden xs:inline sm:hidden md:inline">{isScanning ? "Scanning..." : "Run Diagnostic Scan"}</span>
+          <span className="xs:hidden sm:inline md:hidden">{isScanning ? "Scanning..." : "Diagnostic Scan"}</span>
         </button>
       </div>
 
@@ -168,7 +176,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               {/* Status Badge */}
               <div className="flex items-center gap-1.5 rounded-full bg-[#181C23] px-2.5 py-1 border border-[#282F3B] text-[11px] text-[#00D2C4]">
                 <Radio size={11} className="animate-pulse" />
-                <span className="font-mono text-[10px]">MBUX Live</span>
+                <span className="font-mono text-[10px]">Telemetry Live</span>
               </div>
             </div>
 
@@ -229,7 +237,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             >
               <div className="flex items-center gap-2">
                 <Sparkles size={15} className="text-[#00D2C4]" />
-                <span>Ask MBUX AI to explain vehicle health report</span>
+                <span>Ask Connected AI to explain vehicle health report</span>
               </div>
               <ChevronRight size={14} className="text-[#00D2C4]" />
             </button>

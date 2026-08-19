@@ -138,7 +138,7 @@ export const Tickets: React.FC<TicketsProps> = ({
             Fast-Track Support Tickets
           </h2>
           <p className="text-xs text-zinc-400 mt-1">
-            Zero call center waiting. Telematics-backed prioritization connects directly to Mercedes-Benz Master Technicians.
+            Zero call center waiting. Telematics-backed prioritization connects directly to Certified Master Technicians.
           </p>
         </div>
 

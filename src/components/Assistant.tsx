@@ -308,7 +308,7 @@ You can speak to me with your microphone or type any question below. How can I a
                 if (isSpeaking) VoiceAssistantManager.stopSpeaking();
                 setVoiceSpeechEnabled(!voiceSpeechEnabled);
               }}
-              title={voiceSpeechEnabled ? "Mute MBUX Voice Readout" : "Enable MBUX Voice Readout"}
+              title={voiceSpeechEnabled ? "Mute AI Voice Readout" : "Enable AI Voice Readout"}
               className={`flex h-8 w-8 items-center justify-center rounded-lg border transition-colors ${
                 voiceSpeechEnabled
                   ? "border-[#00D2C4]/40 bg-[#00D2C4]/10 text-[#00D2C4]"
@@ -547,7 +547,7 @@ You can speak to me with your microphone or type any question below. How can I a
       {/* Right Sidebar: Location Context & Voice Action Suggestions (4 Cols) */}
       <div className="lg:col-span-4 space-y-4">
         
-        {/* Closest Mercedes-Benz Workshop Card */}
+        {/* Closest Certified Workshop Card */}
         <div className="rounded-2xl border border-[#23272F] bg-[#111317] p-4 sm:p-5 shadow-xl">
           <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2">
             <span className="flex items-center gap-1.5">
