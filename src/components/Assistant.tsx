@@ -27,6 +27,14 @@ import { Vehicle, ChatMessage, Product, Workshop, UserLocation } from "../types"
 import { VoiceAssistantManager } from "../utils/voiceUtils";
 import { NearestWorkshopCard } from "./NearestWorkshopCard";
 
+const configuredApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+const isGitHubPages = typeof window !== "undefined" && window.location.hostname.endsWith("github.io");
+const triageApiUrl = configuredApiUrl
+  ? `${configuredApiUrl}/api/assistant/triage`
+  : isGitHubPages
+    ? null
+    : "/api/assistant/triage";
+
 interface AssistantProps {
   vehicle: Vehicle;
   products: Product[];
@@ -178,8 +186,11 @@ You can speak to me with your microphone or type any question below. How can I a
     setLoading(true);
 
     try {
-      // Call Server-side Gemini AI triage API with location & nearest workshop context
-      const res = await fetch("/api/assistant/triage", {
+      if (!triageApiUrl) {
+        throw new Error("Static demo mode uses local triage responses");
+      }
+
+      const res = await fetch(triageApiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

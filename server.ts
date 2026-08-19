@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
 
@@ -170,7 +170,7 @@ Keep your response structured, concise (2-3 short paragraphs or targeted bullet 
     });
   } catch (error: any) {
     console.error("AI Triage Error:", error);
-    res.status(500).json({ error: error.message || "Failed to process triage request" });
+    res.status(500).json({ error: "Unable to process triage request" });
   }
 });
 

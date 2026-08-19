@@ -118,9 +118,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
 
               <div className="flex flex-col">
-                <span className="font-display text-base font-bold tracking-tight text-white group-hover:text-zinc-100 transition-colors">
-                  Predictive<span className="text-[#00D2C4]">Care</span>
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-base font-bold tracking-tight text-white group-hover:text-zinc-100 transition-colors">
+                    Predictive<span className="text-[#00D2C4]">Care</span>
+                  </span>
+                  <span className="flex items-center gap-1 rounded-md border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-amber-300">
+                    <Radio size={9} /> DEMO
+                  </span>
+                </div>
               </div>
             </button>
           </div>
