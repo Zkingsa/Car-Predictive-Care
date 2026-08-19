@@ -1,0 +1,6 @@
+{
+  "name": "Predictive Care",
+  "description": "Unified connected vehicle customer hub combining predictive maintenance telemetry, AI-assisted diagnostics, fast-track support ticketing, and an integrated parts catalog.",
+  "requestFramePermissions": ["geolocation", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
