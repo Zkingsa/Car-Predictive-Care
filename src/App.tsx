@@ -11,6 +11,7 @@ import { Tickets } from "./components/Tickets";
 import { Shop } from "./components/Shop";
 import { ServiceLocatorModal } from "./components/ServiceLocatorModal";
 import { AuthModal } from "./components/AuthModal";
+import { TelemetryInfoModal } from "./components/TelemetryInfoModal";
 import { INITIAL_VEHICLES, PRODUCTS, INITIAL_TICKETS, WORKSHOPS } from "./data/mockData";
 import { Vehicle, Ticket, Product, CartItem, UserLocation, Workshop, User } from "./types";
 import { getWorkshopsSortedByDistance } from "./utils/geoUtils";
@@ -24,6 +25,34 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState<boolean>(false);
   const [highlightPartId, setHighlightPartId] = useState<string | null>(null);
 
+  // Theme State: Day Mode ("light") vs Night HUD ("dark")
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("predictivecare_theme");
+      if (saved === "light" || saved === "dark") return saved;
+    }
+    return "dark";
+  });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("predictivecare_theme", theme);
+      if (theme === "light") {
+        document.body.classList.remove("dark-mode");
+        document.body.classList.add("light-mode");
+        document.documentElement.setAttribute("data-theme", "light");
+      } else {
+        document.body.classList.remove("light-mode");
+        document.body.classList.add("dark-mode");
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
   // Authentication state
   const [currentUser, setCurrentUser] = useState<User | null>({
     id: "usr-demo-01",
@@ -33,6 +62,7 @@ export default function App() {
     registeredVehicles: ["v1", "v2", "v3"],
   });
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
+  const [telemetryModalOpen, setTelemetryModalOpen] = useState<boolean>(false);
 
   // User GPS Location & Workshop Locator States
   const [userLocation, setUserLocation] = useState<UserLocation>({
@@ -224,7 +254,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#08090B] text-[#F3F4F6] flex flex-col font-sans selection:bg-[#00D2C4]/20 selection:text-[#00E5D4]">
       
-      {/* Top Navigation with Responsive Burger Menu, GPS Pill & Auth Trigger */}
+      {/* Top Navigation with Responsive Burger Menu, GPS Pill, Day Mode Switcher & Auth */}
       <Navbar
         currentTab={currentTab}
         setTab={setCurrentTab}
@@ -238,6 +268,8 @@ export default function App() {
         onOpenLocatorModal={() => setLocatorModalOpen(true)}
         currentUser={currentUser}
         onOpenAuthModal={() => setAuthModalOpen(true)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Area */}
@@ -333,6 +365,13 @@ export default function App() {
         onLogout={() => setCurrentUser(null)}
       />
 
+      {/* Live Telemetry Info Modal */}
+      <TelemetryInfoModal
+        isOpen={telemetryModalOpen}
+        onClose={() => setTelemetryModalOpen(false)}
+        vehicle={currentVehicle}
+      />
+
       {/* Footer & Brand-Neutral Philosophy */}
       <footer className="mt-auto border-t border-[#1C2028] bg-[#0A0C0F] py-6 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
@@ -352,10 +391,14 @@ export default function App() {
             <span>·</span>
             <span>CAN-Bus 500kbps</span>
             <span>·</span>
-            <span className="flex items-center gap-1 text-emerald-400">
+            <button
+              onClick={() => setTelemetryModalOpen(true)}
+              title="Click to view live CAN-Bus telemetry details"
+              className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 underline-offset-2 hover:underline cursor-pointer transition-colors"
+            >
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
               Live Telemetry Synchronized
-            </span>
+            </button>
           </div>
 
         </div>
